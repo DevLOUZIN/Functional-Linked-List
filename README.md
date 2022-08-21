@@ -6,7 +6,7 @@ Just a linked list :)
 ## How i run it?
 open the archive on you´r terminal 
 ```bash
-gcc -Wall -O main main.c
+gcc -Wall -o main main.c
 ```
 
 ## TODO 
