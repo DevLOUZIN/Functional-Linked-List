@@ -1,71 +1,133 @@
-#include <stdio.h>
+#include <stdio.h> 
 #include <stdlib.h>
 
-struct list {
+typedef struct LinkedNode {
     int value;
-    struct list *next;
-};
+    struct LinkedNode *next;
+}no;
 
-void add(struct list **No, int value) {
-    struct list *new = malloc(sizeof(struct list));
+typedef struct {
+    no *start;
+    int tam;
+}list;
+
+void create_List(list *lista) {
+    lista->start = NULL;
+    lista->tam = 0;
+}
+
+
+void addstart(list *node, int value) {
+    no *new = malloc(sizeof(no));
     new->value = value;
-    new->next = *No;
-    *No = new;
+    new->next = node->start;
+    node->start = new;
+    node->tam = node->tam + 1;
 }
 
-void show(struct list *No) {
-    do {
-        printf("%d | ", No->value);
-        No = No->next;
-    } while(No != NULL);
-}
-
-void addEnd(struct list **No, int value) {
-    struct list *new = malloc(sizeof(struct list));
-    struct list *aux = malloc(sizeof(struct list));
+void addEnd(list *node, int value) {
+    no *new = malloc(sizeof(no));
+    no *aux = malloc(sizeof(no));
     new->value = value;
     new->next = NULL;
-    if(*No == NULL) {
-        *No = new;
+    if(node->start == NULL) {
+        addstart(node, value);
     } else {
-        aux = *No;
-        while (aux->next)
+        aux = node->start;
+        while(aux->next) 
             aux = aux->next;
+        aux->next = new;
+        node->tam++;
+    }
+}
+
+void addMid(list *node, int value, int ref) {
+    no *new = malloc(sizeof(no));
+    no *aux = malloc(sizeof(no));
+    if(node->start == NULL) {
+        addstart(node, value);
+    } else {
+        aux = node->start;
+        while(aux->next && aux->value != ref)
+            aux = aux->next;
+        new->value = value;
+        new->next = aux->next;
         aux->next = new;
     }
 }
 
-int main() {
-    struct list *node = NULL;
-    int opt;
+void addOrd(list *node, int value) {
+    int ref = value;
+    no *new = malloc(sizeof(no));
+    no *aux = malloc(sizeof(no));
+    if(node->start == NULL) {
+        addstart(node, value);
+    } else {
+        aux = node->start;
+        while(aux->next && aux->value >= ref)
+            aux = aux->next;
+        new->value = value;
+        new->next = aux->next;
+        aux->next = new;
+    }
+}
+
+void printlist(list lista) {
+    no *node = lista.start;
     do {
-        printf("\n1 - Add list \t 2 - Add in start \t 3 - Remove list \t 4 - Show List: ");
+        printf("%d | ", node->value);
+        node = node->next;
+    } while(node);
+}
+
+int main() {
+    int opt;
+    list lista;
+    create_List(&lista);
+
+    int value;
+    do {
+        printf("\n1 - addstart | 2 - addEnd | 3 - addMid | 4 - addOrd | 5 - printlist: "); 
         scanf("%d", &opt);
-        switch (opt)
-        {
+        switch(opt) {
             case 1: {
-                int value;
-                printf("Add a value: ");
+                
+                printf("Put the value: ");
                 scanf("%d", &value);
-                addEnd(&node, value);
+                addstart(&lista, value);
                 break;
             }
             case 2: {
-                int value;
-                printf("Add a value: ");
+                
+                printf("Put the value: ");
                 scanf("%d", &value);
-                add(&node, value);
+                addEnd(&lista, value);
                 break;
             }
             case 3: {
-                removeList(node);
-            }
-            case 4: {
-                show(node);
+                
+                int ref;
+                printf("Put the value: ");
+                scanf("%d", &value);
+                printf("Put the reference value: ");
+                scanf("%d", &ref);
+                addMid(&lista, value, ref);
                 break;
             }
-        } 
+            case 4: {
+                printf("Put the value: ");
+                scanf("%d", &value);
+                addOrd(&lista, value);
+                break;
+            }
+            case 5: {
+                printlist(lista);
+                break;
+            }
+        }
     } while(opt != 0);
+
+    printf("Hello world");
     system("pause");
     return 0;
-} 
+}
